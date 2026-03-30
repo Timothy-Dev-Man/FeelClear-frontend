@@ -1,9 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage"
-
-export const KEYS = {
-  TOKEN: "token",
-  USER: "user",
-}
+import { KEYS } from "./KEYS"
 
 export const storeToken = async (token) => {
   try {
