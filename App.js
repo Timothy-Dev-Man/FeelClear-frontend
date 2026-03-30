@@ -1,20 +1,71 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from "@react-navigation/native"
+import { createNativeStackNavigator } from "@react-navigation/native-stack"
+import { useAuth } from "./src/Providers/Context/authContext"
+import Register from "./src/Screens/Auth/Register"
+import { AuthProvider } from "./src/Providers/Auth"
+import Main from "./src/Screens/Home.js/Main"
+import ChooseIcon from "./src/Screens/Auth/ChooseIcons"
+import { useRelationship } from "./src/Providers/Context/relationshipContext"
+import { RelationshipProvider } from "./src/Providers/Relationship"
+import PartnerCode from "./src/Screens/Auth/PartnerCode"
+
+const Stack = createNativeStackNavigator()
+
+function AuthStack() {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <Stack.Screen name="Register" component={Register} />
+      <Stack.Screen name="ChooseIcon" component={ChooseIcon} />
+    </Stack.Navigator>
+  )
+}
+
+function ConnectStack() {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="Connect" component={PartnerCode} />
+    </Stack.Navigator>
+  )
+}
+
+function AppStack() {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <Stack.Screen name="Home" component={Main} />
+    </Stack.Navigator>
+  )
+}
+
+function RootNavigator() {
+  const { user, isLoading } = useAuth()
+  const { isConnected, isLoadingRelationship } = useRelationship()
+
+
+  if (isLoading || isLoadingRelationship) return null
+
+  if (!user) return <AuthStack />
+
+  if (!isConnected) return <ConnectStack />
+
+  return <AppStack />
+}
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+    <AuthProvider>
+      <RelationshipProvider>
+        <NavigationContainer>
+          <RootNavigator />
+        </NavigationContainer>
+      </RelationshipProvider>
+    </AuthProvider>
+  )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
