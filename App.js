@@ -46,14 +46,13 @@ function AppStack() {
 
 function RootNavigator() {
   const { user, isLoading } = useAuth()
-  const { isConnected, isLoadingRelationship } = useRelationship()
-
+  const { isConnected, isLoadingRelationship, hasSkipped } = useRelationship()
 
   if (isLoading || isLoadingRelationship) return null
 
   if (!user) return <AuthStack />
 
-  if (!isConnected) return <ConnectStack />
+  if (!isConnected && !hasSkipped) return <ConnectStack />
 
   return <AppStack />
 }
