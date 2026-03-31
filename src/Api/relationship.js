@@ -1,4 +1,4 @@
-export async function setRelationshipFetch(userId1, inputCode) {
+export async function setRelationshipFetch(userId1, inputCode, token) {
   try {
     const response = await fetch(
       `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/relationship/`,
@@ -6,6 +6,7 @@ export async function setRelationshipFetch(userId1, inputCode) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ userId1: userId1, partnerCode: inputCode }),
       },
