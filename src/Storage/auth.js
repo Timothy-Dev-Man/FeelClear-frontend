@@ -3,7 +3,7 @@ import { KEYS } from "./KEYS"
 
 export const storeToken = async (token) => {
   try {
-    await AsyncStorage.setItem(KEYS.TOKEN, token)
+    await AsyncStorage.setItem(KEYS.TOKEN, JSON.stringify(token))
   } catch (err) {
     throw err
   }
@@ -11,7 +11,7 @@ export const storeToken = async (token) => {
 
 export const getToken = async () => {
   try {
-    const token = await AsyncStorage.getItem(KEYS.TOKEN)
+    const token = JSON.parse(await AsyncStorage.getItem(KEYS.TOKEN))
     return token
   } catch (err) {
     throw err
