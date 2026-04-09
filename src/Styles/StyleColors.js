@@ -9,5 +9,5 @@ export const COLORS = {
   mainInputOutline: "#FFF6FA",
   placeHolderColor: "#7A5B84",
   subTitleText: "#6C476A",
-  navigationBackground: "#FCEEE9",
+  navigationBackground: "#F9E5ED",
 }
