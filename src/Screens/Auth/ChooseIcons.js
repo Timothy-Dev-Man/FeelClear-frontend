@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import ProfileList from "../../Components/ProfileItem"
 import { IconsFetch } from "../../Api/auth"
 import { chooseStyles } from "../../Styles/screens/Auth/chooseIcon"
-import ProfileIcon from "../../Components/ProfileIcon"
+import ProfileIcon from "../../Components/Icons/ProfileIcon"
 
 export default function ChooseIcon({ navigation }) {
   const [images, setImages] = useState([])

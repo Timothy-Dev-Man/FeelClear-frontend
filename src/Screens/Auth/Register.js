@@ -3,15 +3,14 @@ import {
   Text,
   TextInput,
   Pressable,
-  StyleSheet,
   DevSettings,
 } from "react-native"
 import { useEffect, useState } from "react"
 import { useRoute } from "@react-navigation/native"
 import { useAuth } from "../../Providers/Context/authContext"
 import { styles } from "../../Styles/screens/Auth/register-login"
-import ProfileIcon from "../../Components/ProfileIcon"
 import { COLORS } from "../../Styles/StyleColors"
+import ProfileIcon from "../../Components/Icons/ProfileIcon"
 
 const Register = ({ navigation }) => {
   const [username, setUsername] = useState("")

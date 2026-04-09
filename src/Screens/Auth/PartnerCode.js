@@ -4,8 +4,8 @@ import { styles } from "../../Styles/screens/Auth/register-login"
 import { COLORS } from "../../Styles/StyleColors"
 import { useRelationship } from "../../Providers/Context/relationshipContext"
 import { useAuth } from "../../Providers/Context/authContext"
-import CloudIcon from "../../Components/CloudIcon"
 import { partnerStyles } from "../../Styles/screens/Partner/partnerCode"
+import CloudIcon from "../../Components/Icons/CloudIcon"
 
 const PartnerCode = ({ navigation }) => {
   const [code, setCode] = useState("")
