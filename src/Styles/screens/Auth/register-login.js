@@ -28,6 +28,11 @@ export const styles = StyleSheet.create({
     marginTop: 10,
     paddingLeft: 50,
     fontSize: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 10,
+    elevation: 6,
   },
 
   button: {
@@ -38,6 +43,11 @@ export const styles = StyleSheet.create({
     margin: 10,
     width: "80%",
     alignSelf: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.12,
+    shadowRadius: 12,
+    elevation: 8,
   },
 
   buttonText: {

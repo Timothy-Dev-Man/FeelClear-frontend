@@ -21,10 +21,10 @@ export const chooseStyles = StyleSheet.create({
     width: "100%",
     borderColor: "black",
     borderWidth: 2,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.12,
+    shadowRadius: 12,
+    elevation: 8,
   },
-  // header: {
-  //   display: 'flex',
-  //   justifyContent: "flex-start",
-  //   backgroundColor: 'red'
-  // },
 })
