@@ -8,6 +8,8 @@ import ChooseIcon from "./src/Screens/Auth/ChooseIcons"
 import { useRelationship } from "./src/Providers/Context/relationshipContext"
 import { RelationshipProvider } from "./src/Providers/Relationship"
 import PartnerCode from "./src/Screens/Auth/PartnerCode"
+import SettingsPage from "./src/Screens/Settings/ViewSettings"
+import ViewPartner from "./src/Screens/Partner/ViewPartner"
 
 const Stack = createNativeStackNavigator()
 
@@ -40,6 +42,8 @@ function AppStack() {
       }}
     >
       <Stack.Screen name="Home" component={Main} />
+      <Stack.Screen name="Settings" component={SettingsPage} />
+      <Stack.Screen name="ViewPartner" component={ViewPartner} />
     </Stack.Navigator>
   )
 }
