@@ -14,9 +14,6 @@ const SettingsIcon = ({ size = 50 }) => {
       }}
     >
       <Settings width={size} height={size} />
-      {/* <Pressable onPress={() => logout()}>
-        <Text>Logout</Text>
-      </Pressable> */}
     </View>
   )
 }
