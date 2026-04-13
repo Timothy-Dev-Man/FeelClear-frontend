@@ -7,11 +7,17 @@ export const styles = StyleSheet.create({
     borderColor: COLORS.mainInputOutline,
     borderWidth: 2,
     borderLeftWidth: 2,
-    height: "30%",
+    minHeight: "30%",
     width: "100%",
     borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
+  },
+  avatarWrapper: {
+    position: "absolute",
+    top: -50, // pulls image ABOVE the card
+    alignSelf: "center",
+    zIndex: 10,
   },
   pressable: {
     alignSelf: "center",
