@@ -11,7 +11,6 @@ export const navStyles = StyleSheet.create({
     justifyContent: "space-around",
     alignItems: "center",
     height: 120,
-    backgroundColor: "#fff",
     borderTopWidth: 1,
     borderColor: "#ddd",
     shadowColor: "#000",

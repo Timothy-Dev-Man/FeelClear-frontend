@@ -5,6 +5,7 @@ import PartnerIcon from "./Icons/PartnerIcon"
 import SettingsIcon from "./Icons/SettingsIcon"
 import { useNavigation } from "@react-navigation/native"
 import { useRelationship } from "../Providers/Context/relationshipContext"
+import { LinearGradient } from "expo-linear-gradient"
 
 const Navigation = () => {
   const navigation = useNavigation()
@@ -22,7 +23,13 @@ const Navigation = () => {
   }
 
   return (
-    <View style={navStyles.container}>
+    <LinearGradient
+      colors={["#E7DFE9", "#d6c9dd", "#c8b8cf"]}
+      locations={[0, 0.5, 1]}
+      start={{ x: 0.5, y: 0.3 }}
+      end={{ x: 0.5, y: 1 }}
+      style={navStyles.container}
+    >
       <Pressable
         onPress={() => navigation.navigate("Home")}
         style={navStyles.item}
@@ -41,7 +48,7 @@ const Navigation = () => {
         <SettingsIcon size={65} />
         <Text style={[navStyles.label, { color: "#8a86bb" }]}>Settings</Text>
       </Pressable>
-    </View>
+    </LinearGradient>
   )
 }
 
