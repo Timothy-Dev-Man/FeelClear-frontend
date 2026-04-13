@@ -43,7 +43,7 @@ const Register = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <ProfileIcon navigation={navigation} userProfileUri={selected} />
+      <ProfileIcon navigation={navigation} userProfileUri={selected} title="Your avatar" text="This can be changed in settings." />
       <View style={styles.inputBox}>
         <TextInput
           placeholder="Your Name"
