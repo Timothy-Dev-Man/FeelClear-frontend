@@ -2,7 +2,7 @@ import { createContext, useEffect, useState } from "react"
 import { removeToken, storeToken } from "../Storage/auth"
 import { DevSettings } from "react-native"
 import { registerFetch } from "../Api/auth"
-import { getUser, removeUser, storeUser } from "../Storage/user"
+import { getUser, removeUser, removeUserCode, storeUser } from "../Storage/user"
 
 export const AuthContext = createContext()
 
@@ -64,11 +64,14 @@ export function AuthProvider({ children }) {
     setUser(null)
     await removeToken()
     await removeUser()
+    await removeUserCode()
     DevSettings.reload()
   }
 
   return (
-    <AuthContext.Provider value={{ user, isLoading, register, logout }}>
+    <AuthContext.Provider
+      value={{ user, setUser, isLoading, register, logout }}
+    >
       {children}
     </AuthContext.Provider>
   )
