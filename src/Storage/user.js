@@ -45,3 +45,29 @@ export const removeUser = async () => {
     throw err
   }
 }
+
+export const storeUserCode = async (code) => {
+  try {
+    await AsyncStorage.setItem(KEYS.CODE, code)
+  } catch (err) {
+    throw err
+  }
+}
+
+export const getUserCode = async () => {
+  try {
+    const code = await AsyncStorage.getItem(KEYS.CODE)
+    return code ? code : null
+  } catch (err) {
+    console.log("Error getting user:", err)
+    return null
+  }
+}
+
+export const removeUserCode = async () => {
+  try {
+    await AsyncStorage.removeItem(KEYS.CODE)
+  } catch (err) {
+    throw err
+  }
+}
