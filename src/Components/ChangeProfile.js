@@ -2,9 +2,11 @@ import { Pressable, Text, View } from "react-native"
 import { useAuth } from "../Providers/Context/authContext"
 import { settingsStyles } from "../Styles/screens/Home/settingsStyles"
 import UserIcon from "../Components/UserIcon"
+import { useNavigation } from "@react-navigation/native"
 
 const EditProfile = () => {
   const { user } = useAuth()
+  const navigation = useNavigation()
 
   console.log("user: ", user)
   return (
@@ -20,6 +22,7 @@ const EditProfile = () => {
             settingsStyles.pressable,
             { opacity: pressed ? 0.7 : 1 },
           ]}
+          onPress={() => navigation.navigate("ChangeUserPage")}
         >
           <Text>Change</Text>
         </Pressable>
