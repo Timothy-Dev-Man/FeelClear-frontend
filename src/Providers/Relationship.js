@@ -3,13 +3,11 @@ import { setRelationshipFetch } from "../Api/relationship"
 import { getToken } from "../Storage/auth"
 import { getPartnerFetch } from "../Api/partner"
 import { useAuth } from "./Context/authContext"
-import { getUserCode, storeUserCode } from "../Storage/user"
 
 export const relationshipContext = createContext()
 
 export function RelationshipProvider({ children }) {
   const [relationship, setRelationship] = useState(null)
-  const [relationshipCode, setRelationshipCode] = useState(null)
   const [isLoadingRelationship, setIsLoadingRelationship] = useState(false)
 
   const [isConnected, setIsConnected] = useState(null)
@@ -21,31 +19,27 @@ export function RelationshipProvider({ children }) {
 
   const { user } = useAuth()
 
-useEffect(() => {
-  if (!user) return
+  useEffect(() => {
+    if (!user) return
 
-  async function initRelationship() {
-    setIsLoadingRelationship(true)
+    async function initRelationship() {
+      setIsLoadingRelationship(true)
 
-    try {
-      const code = await getUserCode()
+      try {
 
-      setIsConnected(user?.is_connected ?? false)
-      setRelationshipCode(code ?? null)
-    } finally {
-      setIsLoadingRelationship(false)
+        setIsConnected(user?.is_connected ?? false)
+      } finally {
+        setIsLoadingRelationship(false)
+      }
     }
-  }
 
-  initRelationship()
-}, [user])
+    initRelationship()
+  }, [user])
 
   async function createRelationship(userId1, inputCode) {
     setIsLoadingRelationship(true)
     try {
       const token = await getToken()
-      setRelationshipCode(inputCode)
-      await storeUserCode(inputCode)
       const newRelationship = await setRelationshipFetch(
         userId1,
         inputCode,
@@ -64,29 +58,28 @@ useEffect(() => {
     }
   }
 
-const getPartner = useCallback(async (inputCode) => {
-  setPartnerLoading(true)
+  const getPartner = useCallback(async () => {
+    setPartnerLoading(true)
 
-  try {
-    const token = await getToken()
-    const partnerData = await getPartnerFetch(inputCode, token)
-    setPartner(partnerData)
-  } catch (err) {
-    throw err
-  } finally {
+    try {
+      const token = await getToken()
+      const partnerData = await getPartnerFetch(token)
+      setPartner(partnerData)
+    } catch (err) {
+      throw err
+    } finally {
+      setPartnerLoading(false)
+    }
+  }, [])
+
+  function resetRelationship() {
+    setRelationship(null)
+    setIsConnected(null)
+    setHasSkipped(false)
+    setPartner(null)
     setPartnerLoading(false)
+    setIsLoadingRelationship(false)
   }
-}, [])
-
-function resetRelationship() {
-  setRelationship(null)
-  setRelationshipCode(null)
-  setIsConnected(null)
-  setHasSkipped(false)
-  setPartner(null)
-  setPartnerLoading(false)
-  setIsLoadingRelationship(false)
-}
 
   return (
     <relationshipContext.Provider
@@ -98,8 +91,6 @@ function resetRelationship() {
         isLoadingRelationship,
         setHasSkipped,
         hasSkipped,
-        relationshipCode,
-        setRelationshipCode,
         partner,
         isPartnerLoading,
         getPartner,

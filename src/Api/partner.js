@@ -1,7 +1,7 @@
-export async function getPartnerFetch(inputCode, token) {
+export async function getPartnerFetch(token) {
   try {
     const response = await fetch(
-      `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/relationship/partner/${inputCode}`,
+      `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/relationship/partner`,
       {
         method: "GET",
         headers: {
