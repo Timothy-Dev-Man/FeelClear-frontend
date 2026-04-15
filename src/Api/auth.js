@@ -1,4 +1,4 @@
-export async function registerFetch(username, profilePicUrl) {
+export async function registerFetch(username, profilePicUrl, password) {
   try {
     const response = await fetch(
       `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/auth/register`,
@@ -10,6 +10,7 @@ export async function registerFetch(username, profilePicUrl) {
         body: JSON.stringify({
           username,
           profilePicture: profilePicUrl,
+          password: password,
         }),
       },
     )
@@ -20,6 +21,29 @@ export async function registerFetch(username, profilePicUrl) {
     return data
   } catch (err) {
     console.error("RegisterFetch error:", err)
+    throw err
+  }
+}
+
+export async function loginFetch(username, password) {
+  try {
+    const response = await fetch(
+      `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/auth/login`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+      },
+    )
+
+    const data = await response.json()
+
+    console.log("loginFetch: ", data)
+    return data
+  } catch (err) {
+    console.error("loginFetch error:", err)
     throw err
   }
 }
