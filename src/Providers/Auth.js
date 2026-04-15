@@ -1,13 +1,15 @@
 import { createContext, useEffect, useState } from "react"
-import { removeToken, storeToken } from "../Storage/auth"
+import { getToken, removeToken, storeToken } from "../Storage/auth"
 import { DevSettings } from "react-native"
-import { registerFetch } from "../Api/auth"
-import { getUser, removeUser, removeUserCode, storeUser } from "../Storage/user"
+import { loginFetch, registerFetch } from "../Api/auth"
+import { getUser, removeUser, storeUser } from "../Storage/user"
+import { getMeFetch, updateProfileFetch } from "../Api/user"
 
 export const AuthContext = createContext()
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
+  const [selectedPic, setSelectedPic] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
@@ -22,13 +24,11 @@ export function AuthProvider({ children }) {
     loadUser()
   }, [])
 
-  async function register(username, profilePicUrl) {
+  async function register(username, profilePicUrl, password) {
     setIsLoading(true)
 
     try {
-      const newUser = await registerFetch(username, profilePicUrl)
-
-      console.log("New User: ", newUser)
+      const newUser = await registerFetch(username, profilePicUrl, password)
 
       if (!newUser?.token) {
         throw new Error("No token returned from backend")
@@ -53,24 +53,51 @@ export function AuthProvider({ children }) {
     }
   }
 
-  // async function login(username, password) {
-  //   const newUser = await registerLogin({ username, password })
-  //   console.log("New User: ", newUser)
-  //   await storeToken(newUser.token)
-  //   setUser(newUser.user)
-  // }
+  async function login(username, password) {
+    const user = await loginFetch({ username, password })
+    await storeToken(user?.token)
+    setUser(user.user)
+  }
+
+  async function updateUser(newUsername, newUrl) {
+    setIsLoading(true)
+    try {
+      const token = await getToken()
+      const newProfileData = await updateProfileFetch(
+        token,
+        newUsername,
+        newUrl,
+      )
+      /* Now get the user after you updated them */
+      const me = await getMeFetch(token)
+      setUser(me.user)
+    } catch (err) {
+      throw err
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   async function logout() {
     setUser(null)
     await removeToken()
     await removeUser()
-    await removeUserCode()
     DevSettings.reload()
   }
 
   return (
     <AuthContext.Provider
-      value={{ user, setUser, isLoading, register, logout }}
+      value={{
+        user,
+        setUser,
+        isLoading,
+        register,
+        logout,
+        selectedPic,
+        setSelectedPic,
+        updateUser,
+        login,
+      }}
     >
       {children}
     </AuthContext.Provider>
