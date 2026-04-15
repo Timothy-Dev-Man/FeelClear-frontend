@@ -1,12 +1,5 @@
-import {
-  View,
-  Text,
-  TextInput,
-  Pressable,
-  DevSettings,
-} from "react-native"
+import { View, Text, TextInput, Pressable, DevSettings } from "react-native"
 import { useEffect, useState } from "react"
-import { useRoute } from "@react-navigation/native"
 import { useAuth } from "../../Providers/Context/authContext"
 import { styles } from "../../Styles/screens/Auth/register-login"
 import { COLORS } from "../../Styles/StyleColors"
@@ -14,28 +7,27 @@ import ProfileIcon from "../../Components/Icons/ProfileIcon"
 
 const Register = ({ navigation }) => {
   const [username, setUsername] = useState("")
+  const [password, setPassword] = useState("")
   const [selected, setSelected] = useState(null)
   const [loading, setLoading] = useState(false)
 
-  const { register } = useAuth()
-
-  const route = useRoute()
+  const { register, selectedPic } = useAuth()
 
   useEffect(() => {
-    if (route.params?.selectedIcon) {
-      setSelected(route.params.selectedIcon)
+    if (selectedPic) {
+      setSelected(selectedPic)
     }
-  }, [route.params?.selectedIcon])
+  }, [selectedPic])
 
   const handleRegister = async () => {
-    if (!username || !selected) {
-      alert("Please choose a username and profile icon")
+    if (!username || !selected || !password) {
+      alert("Please choose a Username, Profile icon, and password.")
       return
     }
 
     try {
       setLoading(true)
-      await register(username, selected)
+      await register(username, selected, password)
     } finally {
       setLoading(false)
     }
@@ -43,7 +35,12 @@ const Register = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <ProfileIcon navigation={navigation} userProfileUri={selected} title="Your avatar" text="This can be changed in settings." />
+      <ProfileIcon
+        userProfileUri={selected}
+        title="Choose your avatar"
+        text="This can be changed in settings."
+        onPress={() => navigation.navigate("ChooseIcon", { mode: "register" })}
+      />
       <View style={styles.inputBox}>
         <TextInput
           placeholder="Your Name"
@@ -56,6 +53,8 @@ const Register = ({ navigation }) => {
         <TextInput
           placeholder="Password"
           placeholderTextColor={COLORS.placeHolderColor}
+          value={password}
+          onChangeText={setPassword}
           style={styles.input}
         />
 
