@@ -2,6 +2,40 @@ import { StyleSheet } from "react-native"
 import { COLORS } from "../../StyleColors"
 
 export const styles = StyleSheet.create({
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderColor: COLORS.mainInputOutline,
+    borderWidth: 2,
+    borderLeftWidth: 2,
+    borderRadius: 50,
+    width: "100%",
+    height: "30%",
+    backgroundColor: COLORS.mainLightBackground,
+    marginTop: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 10,
+    elevation: 6,
+    gap: 20,
+    padding: 20
+  },
+
+  headerTextContainer: {
+    flex: 1,
+  },
+
+  title: {
+    fontSize: 26,
+    fontWeight: "700",
+  },
+
+  subtitle: {
+    fontSize: 14,
+    color: COLORS.placeHolderColor,
+    marginTop: 4,
+  },
   container: {
     flex: 1,
     padding: 20,
