@@ -10,8 +10,15 @@ import { RelationshipProvider } from "./src/Providers/Relationship"
 import PartnerCode from "./src/Screens/Auth/PartnerCode"
 import SettingsPage from "./src/Screens/Settings/ViewSettings"
 import ViewPartner from "./src/Screens/Partner/ViewPartner"
+import { useEffect } from "react"
+import { getMeFetch } from "./src/Api/user"
+import { getToken } from "./src/Storage/auth"
+import { Text } from "react-native"
+import ChangeUserPage from "./src/Screens/Settings/ChangeUser"
+import Login from "./src/Screens/Auth/Login"
 
 const Stack = createNativeStackNavigator()
+const RootStack = createNativeStackNavigator()
 
 function AuthStack() {
   return (
@@ -21,6 +28,7 @@ function AuthStack() {
       }}
     >
       <Stack.Screen name="Register" component={Register} />
+      <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="ChooseIcon" component={ChooseIcon} />
     </Stack.Navigator>
   )
@@ -44,21 +52,55 @@ function AppStack() {
       <Stack.Screen name="Home" component={Main} />
       <Stack.Screen name="Settings" component={SettingsPage} />
       <Stack.Screen name="ViewPartner" component={ViewPartner} />
+      <Stack.Screen name="ChangeUserPage" component={ChangeUserPage} />
     </Stack.Navigator>
   )
 }
 
 function RootNavigator() {
-  const { user, isLoading } = useAuth()
-  const { isConnected, isLoadingRelationship, hasSkipped } = useRelationship()
+  const { user, setUser, isLoading } = useAuth()
+  const { isConnected, setIsConnected, isLoadingRelationship, hasSkipped } =
+    useRelationship()
+  /* 
+  Create Auth, Connect, and App stacks for RootStack
+  Get and set user for app on reset
+  If there is no user created, the user will be taken to AuthStack.
+*/
+  useEffect(() => {
+    async function getUser() {
+      const token = await getToken()
+      const me = await getMeFetch(token)
+      console.log("ME: ", me)
+      if (me && me.user) {
+        setUser(me.user)
+        setIsConnected(me.user.is_connected)
+      }
+    }
 
-  if (isLoading || isLoadingRelationship) return null
+    getUser()
+  }, [])
 
-  if (!user) return <AuthStack />
+  if (isLoading || isLoadingRelationship) {
+    return <Text>Loading...</Text>
+  }
+  /* 
+  If there is no user created, the user will be taken to AuthStack.
+  If there is a user but they're not connected and they have no skipped already they'll be taken to the ConnectStack.
+  If all are true then they'll be taken to the main app.
+*/
+  return (
+    <RootStack.Navigator screenOptions={{ headerShown: false }}>
+      {!user ? (
+        <RootStack.Screen name="Auth" component={AuthStack} />
+      ) : !isConnected && !hasSkipped ? (
+        <RootStack.Screen name="Connect" component={ConnectStack} />
+      ) : (
+        <RootStack.Screen name="App" component={AppStack} />
+      )}
 
-  if (!isConnected && !hasSkipped) return <ConnectStack />
-
-  return <AppStack />
+      <RootStack.Screen name="ChooseIcon" component={ChooseIcon} />
+    </RootStack.Navigator>
+  )
 }
 
 export default function App() {
