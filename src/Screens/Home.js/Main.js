@@ -21,7 +21,8 @@ const Main = () => {
   const [loading, setLoading] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
 
-  const { relationship } = useRelationship()
+  const { getRelationship, relationship, isLoadingRelationship } =
+    useRelationship()
 
   const handleSend = async () => {
     console.log("pressed")
@@ -29,14 +30,16 @@ const Main = () => {
       alert("You cannot send a blank message.")
       return
     }
-    if (!relationship) {
-      alert("Pair with your partner to start sending messages.")
-      return
-    }
 
     setLoading(true)
-
     try {
+      await getRelationship()
+
+      if (!relationship && !isLoadingRelationship) {
+        alert("Pair with your partner to start sending messages.")
+        return
+      }
+
       const token = await getToken()
       const relationshipId = relationship.id
       const aiResponse = await aiFetch(input, token, relationshipId)
@@ -65,7 +68,7 @@ const Main = () => {
             <Text style={mainPageStyles.subtitle}>What's on your mind?</Text>
           </View>
         </View>
-
+        {/* Have input display only at first, then after response make it disappear */}
         <View
           style={response.reply ? { display: "none" } : mainPageStyles.inputBox}
         >
@@ -93,6 +96,7 @@ const Main = () => {
             </Pressable>
           </View>
         </View>
+        {/* Have response display only after response */}
         <View
           style={
             !response.reply ? { display: "none" } : mainPageStyles.responseBox
@@ -102,6 +106,36 @@ const Main = () => {
           {!loading && response !== "" && (
             <Text style={mainPageStyles.responseText}>{response.reply}</Text>
           )}
+        </View>
+        {/* Have input display only after response but below it */}
+        <View
+          style={
+            !response.reply
+              ? { display: "none" }
+              : [mainPageStyles.spaceIcons, { marginTop: 20, maxHeight: 90 }]
+          }
+        >
+          <TextInput
+            placeholder="Type something..."
+            value={input}
+            onChangeText={setInput}
+            style={mainPageStyles.input}
+            multiline
+            onContentSizeChange={(e) => {
+              const height = e.nativeEvent.contentSize.height
+              setIsExpanded(height > 40)
+            }}
+          />
+          <Pressable
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              padding: 10,
+            }}
+            onPress={handleSend}
+          >
+            <SendIcon />
+          </Pressable>
         </View>
       </ScrollView>
       <Navigation />
