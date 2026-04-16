@@ -54,7 +54,12 @@ export function AuthProvider({ children }) {
   }
 
   async function login(username, password) {
-    const user = await loginFetch({ username, password })
+    const user = await loginFetch(username, password)
+
+    if (!user?.token) {
+      throw new Error("No token returned from backend")
+    }
+
     await storeToken(user?.token)
     setUser(user.user)
   }
