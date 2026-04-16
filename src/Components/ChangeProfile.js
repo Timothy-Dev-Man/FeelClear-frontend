@@ -8,7 +8,6 @@ const EditProfile = () => {
   const { user } = useAuth()
   const navigation = useNavigation()
 
-  console.log("user: ", user)
   return (
     <View style={settingsStyles.subContainer}>
       <Text style={[settingsStyles.name, { marginBottom: 20 }]}>
@@ -16,7 +15,13 @@ const EditProfile = () => {
       </Text>
       <View style={settingsStyles.row}>
         <UserIcon style={{ alignSelf: "flex-end" }} url={user.profile_pic} />
-        <Text style={settingsStyles.name}>{user.username}</Text>
+        <Text
+          style={[settingsStyles.name, { flexShrink: 1 }]}
+          numberOfLines={1}
+          ellipsizeMode="tail"
+        >
+          {user.username}
+        </Text>
         <Pressable
           style={({ pressed }) => [
             settingsStyles.pressable,
