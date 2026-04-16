@@ -44,3 +44,26 @@ export async function getRelationshipFetch(token) {
     throw err
   }
 }
+
+export async function deleteRelationshipFetch(token) {
+  try {
+    const response = await fetch(
+      `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/relationship/`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    )
+
+    const data = await response.json()
+
+    console.log("setRelationshipFetch: ", data)
+    return data
+  } catch (err) {
+    console.error("setRelationshipFetch error:", err)
+    throw err
+  }
+}
