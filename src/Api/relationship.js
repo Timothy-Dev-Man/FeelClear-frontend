@@ -21,3 +21,26 @@ export async function setRelationshipFetch(userId1, inputCode, token) {
     throw err
   }
 }
+
+export async function getRelationshipFetch(token) {
+  try {
+    const response = await fetch(
+      `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/relationship/`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    )
+
+    const data = await response.json()
+
+    console.log("setRelationshipFetch: ", data)
+    return data
+  } catch (err) {
+    console.error("setRelationshipFetch error:", err)
+    throw err
+  }
+}
