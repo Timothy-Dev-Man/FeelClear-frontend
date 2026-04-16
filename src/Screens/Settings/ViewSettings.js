@@ -3,7 +3,7 @@ import { useAuth } from "../../Providers/Context/authContext"
 import EditProfile from "../../Components/ChangeProfile"
 import { settingsStyles } from "../../Styles/screens/Home/settingsStyles"
 import Navigation from "../../Components/Navigation"
-import Verify from "../../Components/Logout"
+import Verify from "../../Components/Verify"
 import { useState } from "react"
 import { useRelationship } from "../../Providers/Context/relationshipContext"
 
