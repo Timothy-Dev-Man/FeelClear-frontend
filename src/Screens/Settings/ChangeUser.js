@@ -8,13 +8,12 @@ import { useAuth } from "../../Providers/Context/authContext"
 
 const ChangeUserPage = () => {
   const [newUsername, setNewUsername] = useState()
-  const { user, selectedPic, setSelectedPic, updateUser } = useAuth()
+  const { selectedPic, setSelectedPic, updateUser } = useAuth()
 
   const navigation = useNavigation()
 
   async function handleUpdate() {
     try {
-      console.log("Before calling updateUser: ", newUsername, "Url: ", selectedPic)
       await updateUser(newUsername, selectedPic)
 
         setSelectedPic(null)
@@ -22,6 +21,14 @@ const ChangeUserPage = () => {
         return
     } catch (err) {
       console.error(`handleUpdate error: ${err}`)
+      throw err
+    }
+  }
+
+  function handleCancel() {
+    try {
+      navigation.goBack()
+    } catch (err) {
       throw err
     }
   }
@@ -54,6 +61,14 @@ const ChangeUserPage = () => {
         onPress={() => handleUpdate()}
       >
         <Text>Update</Text>
+      </Pressable>
+      <Pressable
+        style={settingsStyles.cancelButton}
+        onPress={() => handleCancel()}
+      >
+        <Text style={{ color: "#BE6B9D", fontWeight: "800", fontSize: 15 }}>
+          Cancel
+        </Text>
       </Pressable>
     </View>
   )
