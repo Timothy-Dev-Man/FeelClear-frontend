@@ -35,7 +35,6 @@ export const settingsStyles = StyleSheet.create({
     justifyContent: "flex-end",
   },
   logoutButton: {
-    backgroundColor: "#BE6B9D",
     padding: 15,
     borderRadius: 50,
     alignItems: "center",
@@ -50,7 +49,6 @@ export const settingsStyles = StyleSheet.create({
   cancelButton: {
     backgroundColor: COLORS.mainInput,
     borderWidth: 2,
-    borderColor: "#BE6B9D",
     padding: 15,
     borderRadius: 50,
     alignItems: "center",
