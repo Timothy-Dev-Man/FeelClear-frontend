@@ -1,5 +1,5 @@
 import { createContext, useCallback, useEffect, useState } from "react"
-import { setRelationshipFetch } from "../Api/relationship"
+import { getRelationshipFetch, setRelationshipFetch } from "../Api/relationship"
 import { getToken } from "../Storage/auth"
 import { getPartnerFetch } from "../Api/partner"
 import { useAuth } from "./Context/authContext"
@@ -26,7 +26,6 @@ export function RelationshipProvider({ children }) {
       setIsLoadingRelationship(true)
 
       try {
-
         setIsConnected(user?.is_connected ?? false)
       } finally {
         setIsLoadingRelationship(false)
@@ -72,14 +71,26 @@ export function RelationshipProvider({ children }) {
     }
   }, [])
 
-  function resetRelationship() {
-    setRelationship(null)
-    setIsConnected(null)
-    setHasSkipped(false)
-    setPartner(null)
-    setPartnerLoading(false)
-    setIsLoadingRelationship(false)
+  async function getRelationship() {
+    setIsLoadingRelationship(true)
+    try {
+      const token = await getToken()
+      const rel = await getRelationshipFetch(token)
+      console.log("Rel: ", rel)
+      if (rel?.relationship) {
+        setRelationship(rel.relationship)
+        return rel.relationship
+      }
+    } catch (err) {
+      throw err
+    } finally {
+      setIsLoadingRelationship(false)
+    }
   }
+
+  useEffect(() => {
+    getRelationship()
+  }, [])
 
   return (
     <relationshipContext.Provider
@@ -94,7 +105,7 @@ export function RelationshipProvider({ children }) {
         partner,
         isPartnerLoading,
         getPartner,
-        resetRelationship,
+        getRelationship,
       }}
     >
       {children}
