@@ -18,7 +18,12 @@ export default function ProfileIcon({
     <View
       style={[
         styles.container,
-        wrapperStyles?.padding ? { padding: wrapperStyles.padding } : null,
+        wrapperStyles?.padding
+          ? {
+              padding: wrapperStyles.padding,
+              paddingTop: wrapperStyles.paddingTop,
+            }
+          : null,
       ]}
     >
       <View style={wrapperStyles?.wrapper}>
@@ -42,7 +47,15 @@ export default function ProfileIcon({
       <Text style={styles.small}>{text}</Text>
 
       {extraContent?.map((item, index) => (
-        <View key={index}>{item}</View>
+        <View
+          key={index}
+          style={{
+            alignSelf: "stretch",
+            width: "100%",
+          }}
+        >
+          {item}
+        </View>
       ))}
     </View>
   )
