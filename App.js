@@ -58,7 +58,7 @@ function AppStack() {
 }
 
 function RootNavigator() {
-  const { user, setUser, isLoading } = useAuth()
+  const { user, getUser, isLoading } = useAuth()
   const { isConnected, setIsConnected, isLoadingRelationship, hasSkipped } =
     useRelationship()
   /* 
@@ -67,17 +67,13 @@ function RootNavigator() {
   If there is no user created, the user will be taken to AuthStack.
 */
   useEffect(() => {
-    async function getUser() {
-      const token = await getToken()
-      const me = await getMeFetch(token)
-      console.log("ME: ", me)
-      if (me && me.user) {
-        setUser(me.user)
-        setIsConnected(me.user.is_connected)
-      }
+    async function loadUser() {
+      // getUser returns is_connected bc Auth setIsConnected cannot be in Auth Provider
+      const me = await getUser()
+      setIsConnected(me)
     }
 
-    getUser()
+    loadUser()
   }, [])
 
   if (isLoading || isLoadingRelationship) {
