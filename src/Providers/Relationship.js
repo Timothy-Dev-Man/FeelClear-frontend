@@ -1,5 +1,5 @@
 import { createContext, useCallback, useEffect, useState } from "react"
-import { getRelationshipFetch, setRelationshipFetch } from "../Api/relationship"
+import { deleteRelationshipFetch, getRelationshipFetch, setRelationshipFetch } from "../Api/relationship"
 import { getToken } from "../Storage/auth"
 import { getPartnerFetch } from "../Api/partner"
 import { useAuth } from "./Context/authContext"
@@ -88,6 +88,20 @@ export function RelationshipProvider({ children }) {
     }
   }
 
+    async function deleteRelationship() {
+      setIsLoadingRelationship(true)
+      try {
+        const token = await getToken()
+        const del = await deleteRelationshipFetch(token)
+        console.log("del: ", del)
+        return
+      } catch (err) {
+        throw err
+      } finally {
+        setIsLoadingRelationship(false)
+      }
+    }
+
   useEffect(() => {
     getRelationship()
   }, [])
@@ -106,6 +120,7 @@ export function RelationshipProvider({ children }) {
         isPartnerLoading,
         getPartner,
         getRelationship,
+        deleteRelationship,
       }}
     >
       {children}
