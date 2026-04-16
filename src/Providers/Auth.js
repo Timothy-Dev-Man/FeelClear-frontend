@@ -68,11 +68,7 @@ export function AuthProvider({ children }) {
     setIsLoading(true)
     try {
       const token = await getToken()
-      const newProfileData = await updateProfileFetch(
-        token,
-        newUsername,
-        newUrl,
-      )
+      await updateProfileFetch(token, newUsername, newUrl)
       /* Now get the user after you updated them */
       const me = await getMeFetch(token)
       setUser(me.user)
@@ -80,6 +76,20 @@ export function AuthProvider({ children }) {
       throw err
     } finally {
       setIsLoading(false)
+    }
+  }
+
+  async function getUser() {
+    try {
+      const token = await getToken()
+      const me = await getMeFetch(token)
+      console.log("Auth ME: ", me)
+      if (me && me.user) {
+        setUser(me.user)
+        return me.user.is_connected
+      }
+    } catch (err) {
+      throw err
     }
   }
 
@@ -102,6 +112,7 @@ export function AuthProvider({ children }) {
         setSelectedPic,
         updateUser,
         login,
+        getUser,
       }}
     >
       {children}
