@@ -18,7 +18,10 @@ const ChangeUserPage = () => {
         alert("Username must be between 4 - 12")
         return
       }
-      await updateUser(newUsername, selectedPic)
+
+      const upperCaseUserName =
+        newUsername.charAt(0).toUpperCase() + newUsername.slice(1)
+      await updateUser(upperCaseUserName, selectedPic)
 
       setSelectedPic(null)
       setNewUsername("")

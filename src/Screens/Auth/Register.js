@@ -25,9 +25,11 @@ const Register = ({ navigation }) => {
       return
     }
 
+    const upperCaseUserName = username.charAt(0).toUpperCase() + username.slice(1)
+
     try {
       setLoading(true)
-      await register(username, selected, password)
+      await register(upperCaseUserName, selected, password)
     } finally {
       setLoading(false)
     }
