@@ -1,7 +1,7 @@
 import { View } from "react-native"
 import Heart from "../../../assets/Heart.svg"
 
-const PartnerIcon = ({ size = 50 }) => {
+const PartnerIcon = ({ currentRoute, size = 50 }) => {
   return (
     <View
       style={{
@@ -9,6 +9,7 @@ const PartnerIcon = ({ size = 50 }) => {
         alignItems: "center",
         width: size,
         height: size,
+        opacity: currentRoute === "ViewPartner" ? 1 : 0.4,
       }}
     >
       <Heart width={size} height={size} />

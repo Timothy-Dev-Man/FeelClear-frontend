@@ -1,7 +1,7 @@
 import { View } from "react-native"
 import Home from "../../../assets/Home.svg"
 
-const HomeIcon = ({ size = 50 }) => {
+const HomeIcon = ({ currentRoute, size = 50 }) => {
   return (
     <View
       style={{
@@ -9,6 +9,7 @@ const HomeIcon = ({ size = 50 }) => {
         alignItems: "center",
         width: size,
         height: size,
+        opacity: currentRoute === "Home" ? 1 : 0.4
       }}
     >
       <Home width={size} height={size} />
