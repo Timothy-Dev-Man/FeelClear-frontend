@@ -28,11 +28,26 @@ export const partnerStyles = StyleSheet.create({
     color: COLORS.white,
     marginBottom: 10,
     color: COLORS.subTitleText,
+    textAlign: "center",
+    textAlignVertical: "center",
+  },
+  code: {
+    letterSpacing: 30,
+    fontSize: 30,
   },
   subtitle: {
     fontSize: 20,
     marginBottom: 25,
     textAlign: "center",
     color: COLORS.subTitleText,
+  },
+  codeBox: {
+    backgroundColor: COLORS.mainLightBackground,
+    borderRadius: 20,
+    borderColor: COLORS.mainInputOutline,
+    borderWidth: 1,
+    height: "70%",
+    justifyContent: "center",
+    flexDirection: "row",
   },
 })
