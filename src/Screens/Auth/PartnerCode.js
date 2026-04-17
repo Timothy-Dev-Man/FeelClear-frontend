@@ -5,7 +5,8 @@ import { COLORS } from "../../Styles/StyleColors"
 import { useRelationship } from "../../Providers/Context/relationshipContext"
 import { useAuth } from "../../Providers/Context/authContext"
 import { partnerStyles } from "../../Styles/screens/Partner/partnerCode"
-import {CloudIcon} from "../../Components/Icons/CloudIcon"
+import { CloudIcon } from "../../Components/Icons/CloudIcon"
+import * as Clipboard from "expo-clipboard"
 
 const PartnerCode = ({ navigation }) => {
   const [code, setCode] = useState("")
@@ -43,7 +44,33 @@ const PartnerCode = ({ navigation }) => {
           Ask your partner for their code and enter it below to sync up.
         </Text>
       </View>
-      <View style={styles.inputBox}>
+      <View style={{ height: "20%"}}>
+        <Text style={partnerStyles.title}>Your code:</Text>
+        <Pressable
+          onPress={() => Clipboard.setStringAsync(user.partner_code)}
+        >
+          <View style={partnerStyles.codeBox}>
+            {user.partner_code.split("").map((char, index) => (
+              <Text
+                key={index}
+                style={[
+                  partnerStyles.title,
+                  partnerStyles.code,
+                  {
+                    textDecorationLine: char === " " ? "none" : "underline",
+                    width: 50,
+                    textAlign: "center",
+                  },
+                ]}
+              >
+                {char}
+              </Text>
+            ))}
+          </View>
+        </Pressable>
+      </View>
+
+      <View style={[styles.inputBox, { marginTop: -50}]}>
         <TextInput
           placeholder="Enter Partner Code..."
           placeholderTextColor={COLORS.placeHolderColor}
