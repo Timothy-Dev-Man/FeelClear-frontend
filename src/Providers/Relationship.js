@@ -1,5 +1,9 @@
 import { createContext, useCallback, useEffect, useState } from "react"
-import { deleteRelationshipFetch, getRelationshipFetch, setRelationshipFetch } from "../Api/relationship"
+import {
+  deleteRelationshipFetch,
+  getRelationshipFetch,
+  setRelationshipFetch,
+} from "../Api/relationship"
 import { getToken } from "../Storage/auth"
 import { getPartnerFetch } from "../Api/partner"
 import { useAuth } from "./Context/authContext"
@@ -71,36 +75,45 @@ export function RelationshipProvider({ children }) {
     }
   }, [])
 
-  async function getRelationship() {
+const getRelationship = useCallback(async () => {
+  if (relationship) return relationship
+  if (isLoadingRelationship) return
+
+  setIsLoadingRelationship(true)
+
+  try {
+    const token = await getToken()
+    const rel = await getRelationshipFetch(token)
+
+
+    if (rel?.error) {
+      setRelationship(null)
+      return null
+    }
+
+    if (rel?.relationship) {
+      setRelationship(rel.relationship)
+    }
+
+    return rel?.relationship
+  } finally {
+    setIsLoadingRelationship(false)
+  }
+}, [relationship])
+
+  async function deleteRelationship() {
     setIsLoadingRelationship(true)
     try {
       const token = await getToken()
-      const rel = await getRelationshipFetch(token)
-      console.log("Rel: ", rel)
-      if (rel?.relationship) {
-        setRelationship(rel.relationship)
-        return rel.relationship
-      }
+      const del = await deleteRelationshipFetch(token)
+      console.log("del: ", del)
+      return
     } catch (err) {
       throw err
     } finally {
       setIsLoadingRelationship(false)
     }
   }
-
-    async function deleteRelationship() {
-      setIsLoadingRelationship(true)
-      try {
-        const token = await getToken()
-        const del = await deleteRelationshipFetch(token)
-        console.log("del: ", del)
-        return
-      } catch (err) {
-        throw err
-      } finally {
-        setIsLoadingRelationship(false)
-      }
-    }
 
   useEffect(() => {
     getRelationship()
