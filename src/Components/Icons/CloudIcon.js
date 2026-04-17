@@ -1,7 +1,8 @@
 import { View } from "react-native"
 import Cloud from "../../../assets/cloud.svg"
+import SadCloud from "../../../assets/SadCloud.svg"
 
-const CloudIcon = () => {
+export const CloudIcon = () => {
   return (
     <View style={{ flex: 0.5, justifyContent: "center", alignItems: "center" }}>
       <Cloud width={100} height={100} />
@@ -9,4 +10,10 @@ const CloudIcon = () => {
   )
 }
 
-export default CloudIcon
+export const SadCloudIcon = () => {
+  return (
+    <View style={{ flex: 0.5, justifyContent: "center", alignItems: "center" }}>
+      <SadCloud width={100} height={100} />
+    </View>
+  )
+}
