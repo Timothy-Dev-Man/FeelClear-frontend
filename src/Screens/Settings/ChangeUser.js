@@ -14,11 +14,15 @@ const ChangeUserPage = () => {
 
   async function handleUpdate() {
     try {
+      if (newUsername.length < 4 || newUsername.length > 12) {
+        alert("Username must be between 4 - 12")
+        return
+      }
       await updateUser(newUsername, selectedPic)
 
-        setSelectedPic(null)
-        setNewUsername("")
-        return
+      setSelectedPic(null)
+      setNewUsername("")
+      return
     } catch (err) {
       console.error(`handleUpdate error: ${err}`)
       throw err
