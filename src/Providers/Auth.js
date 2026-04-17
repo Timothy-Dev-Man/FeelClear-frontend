@@ -29,23 +29,18 @@ export function AuthProvider({ children }) {
     try {
       const newUser = await registerFetch(username, profilePicUrl, password)
 
-      if (!newUser?.token) {
-        throw new Error("No token returned from backend")
+      if (newUser && newUser.token) {
+        await storeToken(newUser.token)
+        setUser(newUser.user)
       }
-
-      await storeToken(newUser.token)
-      setUser(newUser.user)
     } catch (err) {
-      const errorMessage =
-        err?.message || err?.response?.data?.error || JSON.stringify(err)
-
-      if (errorMessage.includes("users_username_key")) {
+      if (err.includes("users_username_key")) {
         alert("Username already taken")
         return
       }
-
-      console.error("Register error:", err)
       alert(`${err}`)
+      console.error("Register error:", err)
+      throw err
     } finally {
       setIsLoading(false)
     }
