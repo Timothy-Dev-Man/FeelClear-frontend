@@ -1,12 +1,11 @@
 import { Pressable, Text, View } from "react-native"
 import { settingsStyles } from "../Styles/components/settingsStyles"
-import CloudIcon from "./Icons/CloudIcon"
 
-const Verify = ({ cancel, functionPassed, color, text }) => {
+const Verify = ({ cancel, functionPassed, color, text, component }) => {
   return (
     <View style={settingsStyles.container}>
       <View style={settingsStyles.subContainer}>
-        <CloudIcon />
+        {component}
         <Text style={settingsStyles.title}>
           Are you sure you want to {text}?
         </Text>
