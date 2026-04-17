@@ -12,18 +12,28 @@ const SettingsPage = () => {
   const [showLogout, setShowLogout] = useState(false)
   const [showUnpair, setShowUnpair] = useState(false)
 
-  const { deleteRelationship } = useRelationship()
+  const { deleteRelationship, relationship } = useRelationship()
 
   const { getUser, logout } = useAuth()
 
   async function handleUnpair() {
     try {
+      if (!relationship) {
+        return
+      }
       await deleteRelationship()
       const me = await getUser()
       console.log(" handleUnpair ME: ", me)
     } catch (err) {
       throw err
     }
+  }
+
+  function handleShowUnpair() {
+    if (!relationship) {
+      return
+    }
+    setShowUnpair(true)
   }
 
   return (
@@ -38,8 +48,8 @@ const SettingsPage = () => {
       </Pressable>
 
       <Pressable
-        style={settingsStyles.logoutButton}
-        onPress={() => setShowUnpair(true)}
+        style={[settingsStyles.logoutButton, { opacity: !relationship ? 0.4 : 1 }]}
+        onPress={() => handleShowUnpair()}
       >
         <Text>Unpair with partner</Text>
       </Pressable>
