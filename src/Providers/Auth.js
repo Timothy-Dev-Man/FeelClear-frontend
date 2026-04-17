@@ -34,7 +34,6 @@ export function AuthProvider({ children }) {
       }
 
       await storeToken(newUser.token)
-      await storeUser(newUser.user)
       setUser(newUser.user)
     } catch (err) {
       const errorMessage =
