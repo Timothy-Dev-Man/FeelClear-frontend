@@ -12,7 +12,7 @@ const SettingsPage = () => {
   const [showLogout, setShowLogout] = useState(false)
   const [showUnpair, setShowUnpair] = useState(false)
 
-  const { deleteRelationship, setIsConnected } = useRelationship()
+  const { deleteRelationship } = useRelationship()
 
   const { getUser, logout } = useAuth()
 
@@ -21,7 +21,6 @@ const SettingsPage = () => {
       await deleteRelationship()
       const me = await getUser()
       console.log(" handleUnpair ME: ", me)
-      setIsConnected(me)
     } catch (err) {
       throw err
     }
