@@ -28,9 +28,9 @@ export const navStyles = StyleSheet.create({
     paddingBottom: 8,
   },
   label: {
-    fontSize: 20,
+    fontSize: 25,
     marginTop: 8,
-    fontWeight: "700",
+    fontWeight: "900",
     textAlign: "center",
   },
 })
