@@ -23,11 +23,12 @@ export const SendInput = ({
         }}
       />
       <Pressable
-        style={{
+        style={({ pressed }) => ({
           justifyContent: "center",
           alignItems: "center",
           padding: 10,
-        }}
+          opacity: pressed ? 0.6 : 1,
+        })}
         onPress={handleSend}
         disabled={loading}
       >
