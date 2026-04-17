@@ -5,7 +5,7 @@ import { COLORS } from "../../Styles/StyleColors"
 import { useRelationship } from "../../Providers/Context/relationshipContext"
 import { useAuth } from "../../Providers/Context/authContext"
 import { partnerStyles } from "../../Styles/screens/Partner/partnerCode"
-import CloudIcon from "../../Components/Icons/CloudIcon"
+import {CloudIcon} from "../../Components/Icons/CloudIcon"
 
 const PartnerCode = ({ navigation }) => {
   const [code, setCode] = useState("")

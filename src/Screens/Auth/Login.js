@@ -4,7 +4,7 @@ import { useAuth } from "../../Providers/Context/authContext"
 import { styles } from "../../Styles/screens/Auth/register-login"
 import { COLORS } from "../../Styles/StyleColors"
 import ProfileIcon from "../../Components/Icons/ProfileIcon"
-import CloudIcon from "../../Components/Icons/CloudIcon"
+import {CloudIcon} from "../../Components/Icons/CloudIcon"
 
 const Login = ({ navigation }) => {
   const [username, setUsername] = useState("")

@@ -6,6 +6,7 @@ import Navigation from "../../Components/Navigation"
 import Verify from "../../Components/Verify"
 import { useState } from "react"
 import { useRelationship } from "../../Providers/Context/relationshipContext"
+import { SadCloudIcon } from "../../Components/Icons/CloudIcon"
 
 const SettingsPage = () => {
   const [showLogout, setShowLogout] = useState(false)
@@ -49,6 +50,7 @@ const SettingsPage = () => {
           functionPassed={logout}
           color="#BE6B9D"
           text="Logout"
+          component={<SadCloudIcon />}
         />
       )}
       {showUnpair && (
@@ -57,6 +59,7 @@ const SettingsPage = () => {
           functionPassed={handleUnpair}
           color="#BE6B9D"
           text="Unpair"
+          component={<SadCloudIcon />}
         />
       )}
       <Navigation />
