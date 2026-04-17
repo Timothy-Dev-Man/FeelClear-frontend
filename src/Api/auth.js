@@ -18,9 +18,24 @@ export async function registerFetch(username, profilePicUrl, password) {
     const data = await response.json()
 
     console.log("RegisterFetch: ", data)
+
+    const rawError = data.errors || data.error || data.err || data?.err?.message
+    if (rawError) {
+      let message = "Unknown error"
+
+      if (Array.isArray(rawError)) {
+        message = rawError.map((e) => e.msg).join(", ")
+      } else if (typeof rawError === "string") {
+        message = rawError
+      } else if (rawError?.message) {
+        message = rawError.message
+      }
+
+      throw new Error(message)
+    }
     return data
   } catch (err) {
-    console.error("RegisterFetch error:", err)
+    console.error("RegisterFetch asdf error:", err)
     throw err
   }
 }
@@ -41,6 +56,20 @@ export async function loginFetch(username, password) {
     const data = await response.json()
 
     console.log("loginFetch: ", data)
+    const rawError = data.errors || data.error || data.err || data?.err?.message
+    if (rawError) {
+      let message = "Unknown error"
+
+      if (Array.isArray(rawError)) {
+        message = rawError.map((e) => e.msg).join(", ")
+      } else if (typeof rawError === "string") {
+        message = rawError
+      } else if (rawError?.message) {
+        message = rawError.message
+      }
+
+      throw new Error(message)
+    }
     return data
   } catch (err) {
     console.error("loginFetch error:", err)
