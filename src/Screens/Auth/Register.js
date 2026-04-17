@@ -70,10 +70,6 @@ const Register = ({ navigation }) => {
           {loading ? "Registering..." : "Register"}
         </Text>
       </Pressable>
-
-      <Pressable onPress={() => DevSettings.reload()}>
-        <Text style={styles.link}>Reload</Text>
-      </Pressable>
     </View>
   )
 }
