@@ -1,5 +1,5 @@
 import { View, Text, ScrollView } from "react-native"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { aiFetch } from "../../Api/ai"
 import { getToken } from "../../Storage/auth"
 import { mainPageStyles } from "../../Styles/screens/Home/main"
@@ -8,6 +8,7 @@ import SendIcon from "../../Components/Icons/SendIcon"
 import Navigation from "../../Components/Navigation"
 import { useRelationship } from "../../Providers/Context/relationshipContext"
 import { SendInput } from "../../Components/SendInput"
+import { useAuth } from "../../Providers/Context/authContext"
 
 const Main = () => {
   const [input, setInput] = useState("")
@@ -15,8 +16,12 @@ const Main = () => {
   const [loading, setLoading] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
 
-  const { getRelationship, relationship, isLoadingRelationship } =
-    useRelationship()
+  const { getRelationship, relationship } = useRelationship()
+  const { user } = useAuth()
+
+  useEffect(() => {
+    if (user) getRelationship()
+  }, [user])
 
   const handleSend = async () => {
     if (!input.trim()) {
@@ -27,19 +32,13 @@ const Main = () => {
     setLoading(true)
 
     try {
-      let rel = relationship
-
-      if (!rel) {
-        rel = await getRelationship()
-      }
-
-      if (!rel) {
+      if (!relationship) {
         alert("Pair with your partner to start sending messages.")
         return
       }
 
       const token = await getToken()
-      const aiResponse = await aiFetch(input, token, rel.id)
+      const aiResponse = await aiFetch(input, token, relationship.id)
 
       setResponse(aiResponse)
     } catch (err) {
@@ -80,23 +79,25 @@ const Main = () => {
 
         {response?.reply && (
           <View style={mainPageStyles.responseBox}>
-            <Text style={mainPageStyles.responseText}>{response.reply}</Text>
-
-            {loading && !response?.reply && <Text>Loading...</Text>}
+            {loading && <Text>Loading...</Text>}
+            {!loading ? (
+              <Text style={mainPageStyles.responseText}>{response.reply}</Text>
+            ) : null}
           </View>
         )}
 
-        {loading && <Text>Loading...</Text>}
+        {/* {loading && <Text>Loading...</Text>} */}
 
         {response?.reply && (
-          <SendInput
-            handleSend={handleSend}
-            setInput={setInput}
-            input={input}
-            setIsExpanded={setIsExpanded}
-            loading={loading}
-            myStyle={{height: "10%", margin: 10}}
-          />
+          <View style={[mainPageStyles.inputBox, { marginTop: 10 }]}>
+            <SendInput
+              handleSend={handleSend}
+              setInput={setInput}
+              input={input}
+              setIsExpanded={setIsExpanded}
+              loading={loading}
+            />
+          </View>
         )}
       </ScrollView>
       <Navigation />
