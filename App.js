@@ -58,33 +58,19 @@ function AppStack() {
 }
 
 function RootNavigator() {
-  const { user, getUser, isLoading } = useAuth()
-  const {
-    isConnected,
-    setIsConnected,
-    isLoadingRelationship,
-    hasSkipped,
-    getRelationship,
-  } = useRelationship()
+  const { user, isLoading } = useAuth()
+  const { isLoadingRelationship, hasSkipped } = useRelationship()
+
   /* 
   Create Auth, Connect, and App stacks for RootStack
   Get and set user for app on reset
   If there is no user created, the user will be taken to AuthStack.
 */
-  useEffect(() => {
-    async function loadUser() {
-      // getUser returns is_connected bc Auth setIsConnected cannot be in Auth Provider
-      const me = await getUser()
-      setIsConnected(me)
-      await getRelationship()
-    }
 
-    loadUser()
-  }, [])
-
-  if (isLoading || isLoadingRelationship) {
+  if (isLoading) {
     return <Text>Loading...</Text>
   }
+
   /* 
   If there is no user created, the user will be taken to AuthStack.
   If there is a user but they're not connected and they have no skipped already they'll be taken to the ConnectStack.
@@ -94,8 +80,8 @@ function RootNavigator() {
     <RootStack.Navigator screenOptions={{ headerShown: false }}>
       {!user ? (
         <RootStack.Screen name="Auth" component={AuthStack} />
-      ) : !isConnected && !hasSkipped ? (
-        <RootStack.Screen name="Connect" component={ConnectStack} />
+      ) : !user.is_connected && !hasSkipped ? (
+        <RootStack.Screen name="ConnectPage" component={ConnectStack} />
       ) : (
         <RootStack.Screen name="App" component={AppStack} />
       )}
