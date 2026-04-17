@@ -59,8 +59,13 @@ function AppStack() {
 
 function RootNavigator() {
   const { user, getUser, isLoading } = useAuth()
-  const { isConnected, setIsConnected, isLoadingRelationship, hasSkipped } =
-    useRelationship()
+  const {
+    isConnected,
+    setIsConnected,
+    isLoadingRelationship,
+    hasSkipped,
+    getRelationship,
+  } = useRelationship()
   /* 
   Create Auth, Connect, and App stacks for RootStack
   Get and set user for app on reset
@@ -71,6 +76,7 @@ function RootNavigator() {
       // getUser returns is_connected bc Auth setIsConnected cannot be in Auth Provider
       const me = await getUser()
       setIsConnected(me)
+      await getRelationship()
     }
 
     loadUser()
