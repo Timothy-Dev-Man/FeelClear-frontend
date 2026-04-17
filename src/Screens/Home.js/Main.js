@@ -1,23 +1,17 @@
-import {
-  View,
-  Text,
-  TextInput,
-  Pressable,
-  Alert,
-  ScrollView,
-} from "react-native"
+import { View, Text, ScrollView } from "react-native"
 import { useState } from "react"
 import { aiFetch } from "../../Api/ai"
 import { getToken } from "../../Storage/auth"
 import { mainPageStyles } from "../../Styles/screens/Home/main"
-import CloudIcon from "../../Components/Icons/CloudIcon"
+import { CloudIcon } from "../../Components/Icons/CloudIcon"
 import SendIcon from "../../Components/Icons/SendIcon"
 import Navigation from "../../Components/Navigation"
 import { useRelationship } from "../../Providers/Context/relationshipContext"
+import { SendInput } from "../../Components/SendInput"
 
 const Main = () => {
   const [input, setInput] = useState("")
-  const [response, setResponse] = useState([])
+  const [response, setResponse] = useState(null)
   const [loading, setLoading] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
 
@@ -25,29 +19,32 @@ const Main = () => {
     useRelationship()
 
   const handleSend = async () => {
-    console.log("pressed")
-    if (!input) {
+    if (!input.trim()) {
       alert("You cannot send a blank message.")
       return
     }
 
     setLoading(true)
-    try {
-      await getRelationship()
 
-      if (!relationship && !isLoadingRelationship) {
+    try {
+      let rel = relationship
+
+      if (!rel) {
+        rel = await getRelationship()
+      }
+
+      if (!rel) {
         alert("Pair with your partner to start sending messages.")
         return
       }
 
       const token = await getToken()
-      const relationshipId = relationship.id
-      const aiResponse = await aiFetch(input, token, relationshipId)
-      await new Promise((resolve) => setTimeout(resolve, 1500))
-      console.log("aiResponse: ", aiResponse)
+      const aiResponse = await aiFetch(input, token, rel.id)
+
       setResponse(aiResponse)
     } catch (err) {
-      setResponse("Something went wrong")
+      console.error(err)
+      setResponse({ reply: "Something went wrong" })
     } finally {
       setLoading(false)
     }
@@ -68,75 +65,39 @@ const Main = () => {
             <Text style={mainPageStyles.subtitle}>What's on your mind?</Text>
           </View>
         </View>
-        {/* Have input display only at first, then after response make it disappear */}
-        <View
-          style={response.reply ? { display: "none" } : mainPageStyles.inputBox}
-        >
-          <View style={mainPageStyles.spaceIcons}>
-            <TextInput
-              placeholder="Type something..."
-              value={input}
-              onChangeText={setInput}
-              style={mainPageStyles.input}
-              multiline
-              onContentSizeChange={(e) => {
-                const height = e.nativeEvent.contentSize.height
-                setIsExpanded(height > 40)
-              }}
+
+        {!response?.reply && (
+          <View style={mainPageStyles.inputBox}>
+            <SendInput
+              handleSend={handleSend}
+              setInput={setInput}
+              input={input}
+              setIsExpanded={setIsExpanded}
+              loading={loading}
             />
-            <Pressable
-              style={{
-                justifyContent: "center",
-                alignItems: "center",
-                padding: 10,
-              }}
-              onPress={handleSend}
-            >
-              <SendIcon />
-            </Pressable>
           </View>
-        </View>
-        {/* Have response display only after response */}
-        <View
-          style={
-            !response.reply ? { display: "none" } : mainPageStyles.responseBox
-          }
-        >
-          {loading && <Text>Loading...</Text>}
-          {!loading && response !== "" && (
+        )}
+
+        {response?.reply && (
+          <View style={mainPageStyles.responseBox}>
             <Text style={mainPageStyles.responseText}>{response.reply}</Text>
-          )}
-        </View>
-        {/* Have input display only after response but below it */}
-        <View
-          style={
-            !response.reply
-              ? { display: "none" }
-              : [mainPageStyles.spaceIcons, { marginTop: 20, maxHeight: 90 }]
-          }
-        >
-          <TextInput
-            placeholder="Type something..."
-            value={input}
-            onChangeText={setInput}
-            style={mainPageStyles.input}
-            multiline
-            onContentSizeChange={(e) => {
-              const height = e.nativeEvent.contentSize.height
-              setIsExpanded(height > 40)
-            }}
+
+            {loading && !response?.reply && <Text>Loading...</Text>}
+          </View>
+        )}
+
+        {loading && <Text>Loading...</Text>}
+
+        {response?.reply && (
+          <SendInput
+            handleSend={handleSend}
+            setInput={setInput}
+            input={input}
+            setIsExpanded={setIsExpanded}
+            loading={loading}
+            myStyle={{height: "10%", margin: 10}}
           />
-          <Pressable
-            style={{
-              justifyContent: "center",
-              alignItems: "center",
-              padding: 10,
-            }}
-            onPress={handleSend}
-          >
-            <SendIcon />
-          </Pressable>
-        </View>
+        )}
       </ScrollView>
       <Navigation />
     </View>
