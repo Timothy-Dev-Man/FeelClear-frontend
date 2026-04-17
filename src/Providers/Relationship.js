@@ -14,26 +14,18 @@ export function RelationshipProvider({ children }) {
   const [relationship, setRelationship] = useState(null)
   const [isLoadingRelationship, setIsLoadingRelationship] = useState(false)
 
-  const [isConnected, setIsConnected] = useState(null)
-
   const [hasSkipped, setHasSkipped] = useState(false)
 
   const [partner, setPartner] = useState(null)
   const [isPartnerLoading, setPartnerLoading] = useState(false)
 
-  const { user } = useAuth()
+  const { user, getUser } = useAuth()
 
   useEffect(() => {
     if (!user) return
 
     async function initRelationship() {
-      setIsLoadingRelationship(true)
-
-      try {
-        setIsConnected(user?.is_connected ?? false)
-      } finally {
-        setIsLoadingRelationship(false)
-      }
+       await getRelationship()
     }
 
     initRelationship()
@@ -49,11 +41,7 @@ export function RelationshipProvider({ children }) {
         token,
       )
       setRelationship(newRelationship.relationship)
-      if (newRelationship.relationship.connected_at) {
-        setIsConnected(true)
-      } else {
-        throw new Error("Couldn't connect both users")
-      }
+      await getUser()
     } catch (err) {
       throw err
     } finally {
@@ -76,7 +64,6 @@ export function RelationshipProvider({ children }) {
   }, [])
 
 const getRelationship = useCallback(async () => {
-  if (relationship) return relationship
   if (isLoadingRelationship) return
 
   setIsLoadingRelationship(true)
@@ -99,7 +86,7 @@ const getRelationship = useCallback(async () => {
   } finally {
     setIsLoadingRelationship(false)
   }
-}, [relationship])
+}, [relationship, isLoadingRelationship])
 
   async function deleteRelationship() {
     setIsLoadingRelationship(true)
@@ -107,6 +94,7 @@ const getRelationship = useCallback(async () => {
       const token = await getToken()
       const del = await deleteRelationshipFetch(token)
       console.log("del: ", del)
+      await getUser()
       return
     } catch (err) {
       throw err
@@ -115,17 +103,11 @@ const getRelationship = useCallback(async () => {
     }
   }
 
-  useEffect(() => {
-    getRelationship()
-  }, [])
-
   return (
     <relationshipContext.Provider
       value={{
         createRelationship,
         relationship,
-        isConnected,
-        setIsConnected,
         isLoadingRelationship,
         setHasSkipped,
         hasSkipped,

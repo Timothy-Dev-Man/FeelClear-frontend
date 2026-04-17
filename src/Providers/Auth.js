@@ -2,7 +2,6 @@ import { createContext, useEffect, useState } from "react"
 import { getToken, removeToken, storeToken } from "../Storage/auth"
 import { DevSettings } from "react-native"
 import { loginFetch, registerFetch } from "../Api/auth"
-import { getUser, removeUser, storeUser } from "../Storage/user"
 import { getMeFetch, updateProfileFetch } from "../Api/user"
 
 export const AuthContext = createContext()
@@ -14,9 +13,9 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     async function loadUser() {
-      const storedUser = await getUser()
-      if (storedUser) {
-        setUser(storedUser)
+      const user = await getUser()
+      if (user) {
+        setUser(user)
       }
       setIsLoading(false)
     }
@@ -70,8 +69,7 @@ export function AuthProvider({ children }) {
       const token = await getToken()
       await updateProfileFetch(token, newUsername, newUrl)
       /* Now get the user after you updated them */
-      const me = await getMeFetch(token)
-      setUser(me.user)
+      await getUser()
     } catch (err) {
       throw err
     } finally {
@@ -86,7 +84,7 @@ export function AuthProvider({ children }) {
       console.log("Auth ME: ", me)
       if (me && me.user) {
         setUser(me.user)
-        return me.user.is_connected
+        return me.user
       }
     } catch (err) {
       throw err
@@ -96,7 +94,6 @@ export function AuthProvider({ children }) {
   async function logout() {
     setUser(null)
     await removeToken()
-    await removeUser()
     DevSettings.reload()
   }
 
