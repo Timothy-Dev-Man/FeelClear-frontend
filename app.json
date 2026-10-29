@@ -15,13 +15,19 @@
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE"
-      }
+      },
+      "package": "com.devtim08.feelClear"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
       "expo-secure-store"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "2a309ea3-fd15-4acc-8657-887b47af6898"
+      }
+    }
   }
 }
