@@ -1,36 +1,33 @@
 import { StyleSheet } from "react-native"
-import { COLORS } from "../StyleColors"
+import { COLORS, SPACING } from "../StyleColors"
 
 export const navStyles = StyleSheet.create({
   container: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    bottom: 0,
     flexDirection: "row",
-    justifyContent: "space-around",
+    justifyContent: "space-evenly",
     alignItems: "center",
-    height: 120,
+    height: 72,
     borderTopWidth: 1,
-    borderColor: "#ddd",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.12,
-    shadowRadius: 12,
-    elevation: 12,
+    borderColor: COLORS.border,
+    backgroundColor: COLORS.surface,
     zIndex: 10,
   },
   item: {
     flex: 1,
-    justifyContent: "flex-end",
+    justifyContent: "center",
     alignItems: "center",
-    minHeight: "100%",
-    paddingBottom: 8,
+    minHeight: 56,
+    gap: 4,
+    paddingVertical: SPACING.xs,
   },
   label: {
-    fontSize: 25,
-    marginTop: 8,
-    fontWeight: "900",
+    color: COLORS.mutedBlueGray,
+    fontSize: 12,
+    fontWeight: "500",
     textAlign: "center",
+  },
+  activeLabel: {
+    color: COLORS.forest,
+    fontWeight: "700",
   },
 })

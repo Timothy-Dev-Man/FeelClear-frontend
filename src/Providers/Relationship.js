@@ -22,14 +22,21 @@ export function RelationshipProvider({ children }) {
   const { user, getUser } = useAuth()
 
   useEffect(() => {
-    if (!user) return
+    if (!user) {
+      setRelationship(null)
+      setPartner(null)
+      setHasSkipped(false)
+      return
+    }
 
     async function initRelationship() {
-       await getRelationship()
+      try {
+        await getRelationship()
+      } catch { }
     }
 
     initRelationship()
-  }, [user])
+  }, [user?.id])
 
   async function createRelationship(userId1, inputCode) {
     setIsLoadingRelationship(true)
@@ -42,8 +49,13 @@ export function RelationshipProvider({ children }) {
       )
       setRelationship(newRelationship.relationship)
       await getUser()
-    } catch (err) {
-      throw err
+    } catch (error) {
+      if (error.status === 401) {
+        try {
+          await getUser()
+        } catch { }
+      }
+      throw error
     } finally {
       setIsLoadingRelationship(false)
     }
@@ -56,48 +68,59 @@ export function RelationshipProvider({ children }) {
       const token = await getToken()
       const partnerData = await getPartnerFetch(token)
       setPartner(partnerData)
-    } catch (err) {
-      throw err
+    } catch (error) {
+      if (error.status === 401) {
+        try {
+          await getUser()
+        } catch { }
+      }
+      throw error
     } finally {
       setPartnerLoading(false)
     }
   }, [])
 
-const getRelationship = useCallback(async () => {
-  if (isLoadingRelationship) return
+  const getRelationship = useCallback(async () => {
+    setIsLoadingRelationship(true)
+    try {
+      const token = await getToken()
+      if (!token) {
+        setRelationship(null)
+        return null
+      }
 
-  setIsLoadingRelationship(true)
-
-  try {
-    const token = await getToken()
-    const rel = await getRelationshipFetch(token)
-
-
-    if (rel?.error) {
-      setRelationship(null)
-      return null
+      const result = await getRelationshipFetch(token)
+      const currentRelationship = result?.relationship ?? null
+      setRelationship(currentRelationship)
+      return currentRelationship
+    } catch (error) {
+      if (error.status === 401) {
+        try {
+          await getUser()
+        } catch { }
+      }
+      throw error
+    } finally {
+      setIsLoadingRelationship(false)
     }
-
-    if (rel?.relationship) {
-      setRelationship(rel.relationship)
-    }
-
-    return rel?.relationship
-  } finally {
-    setIsLoadingRelationship(false)
-  }
-}, [relationship, isLoadingRelationship])
+  }, [])
 
   async function deleteRelationship() {
     setIsLoadingRelationship(true)
     try {
       const token = await getToken()
       const del = await deleteRelationshipFetch(token)
-      console.log("del: ", del)
+      setRelationship(null)
+      setPartner(null)
       await getUser()
-      return
-    } catch (err) {
-      throw err
+      return del
+    } catch (error) {
+      if (error.status === 401) {
+        try {
+          await getUser()
+        } catch { }
+      }
+      throw error
     } finally {
       setIsLoadingRelationship(false)
     }

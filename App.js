@@ -13,9 +13,10 @@ import ViewPartner from "./src/Screens/Partner/ViewPartner"
 import { useEffect } from "react"
 import { getMeFetch } from "./src/Api/user"
 import { getToken } from "./src/Storage/auth"
-import { Text } from "react-native"
+import { ActivityIndicator, Text, View } from "react-native"
 import ChangeUserPage from "./src/Screens/Settings/ChangeUser"
 import Login from "./src/Screens/Auth/Login"
+import { COLORS } from "./src/Styles/StyleColors"
 
 const Stack = createNativeStackNavigator()
 const RootStack = createNativeStackNavigator()
@@ -68,7 +69,20 @@ function RootNavigator() {
 */
 
   if (isLoading) {
-    return <Text>Loading...</Text>
+    return (
+      <View
+        style={{
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 12,
+          backgroundColor: COLORS.background,
+        }}
+      >
+        <ActivityIndicator color={COLORS.forest} />
+        <Text style={{ color: COLORS.mutedBlueGray }}>Loading FeelClear...</Text>
+      </View>
+    )
   }
 
   /* 

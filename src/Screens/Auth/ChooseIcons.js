@@ -40,7 +40,7 @@ export default function ChooseIcon({ navigation }) {
 
   return (
     <View style={chooseStyles.container}>
-      <Text style={settingsStyles.title}>Settings</Text>
+      <Text style={settingsStyles.title}>Choose an avatar</Text>
       <ProfileIcon
         userProfileUri={selected}
         title="Your avatar"

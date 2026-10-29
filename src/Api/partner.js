@@ -1,22 +1,19 @@
+import { getApiErrorMessage, readApiResponse } from "./response"
+
 export async function getPartnerFetch(token) {
-  try {
-    const response = await fetch(
-      `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/relationship/partner`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    )
+  if (!token) throw new Error("You are not signed in.")
 
-    const data = await response.json()
+  const response = await fetch(
+    `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/relationship/partner`,
+    {
+      method: "GET",
+      headers: { Authorization: `Bearer ${token}` },
+    },
+  )
 
-    console.log("getPartnerFetch: ", data)
-    return data
-  } catch (err) {
-    console.error("getPartnerFetch error:", err)
-    throw err
+  const data = await readApiResponse(response)
+  if (data.error || data.errors || data.err) {
+    throw new Error(getApiErrorMessage(data))
   }
+  return data
 }

@@ -1,5 +1,6 @@
 import { Pressable, Text, View } from "react-native"
 import { settingsStyles } from "../Styles/components/settingsStyles"
+import { COLORS } from "../Styles/StyleColors"
 
 const Verify = ({ cancel, functionPassed, color, text, component }) => {
   return (
@@ -22,7 +23,9 @@ const Verify = ({ cancel, functionPassed, color, text, component }) => {
             style={[settingsStyles.logoutButton, { backgroundColor: color }]}
             onPress={() => functionPassed()}
           >
-            <Text style={{ fontWeight: "600" }}>{text}</Text>
+            <Text style={{ color: COLORS.white, fontWeight: "600" }}>
+              {text}
+            </Text>
           </Pressable>
         </View>
       </View>

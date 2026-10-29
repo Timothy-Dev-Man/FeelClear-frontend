@@ -1,4 +1,5 @@
 import { View, Image, Pressable } from "react-native"
+import { COLORS } from "../Styles/StyleColors"
 
 const ProfileList = ({ list = [], selected, onSelect }) => {
   return (
@@ -22,7 +23,7 @@ const ProfileList = ({ list = [], selected, onSelect }) => {
               height: 70,
               borderRadius: 35,
               borderWidth: selected === pfp ? 3 : 0,
-              borderColor: "#c08497", // match theme
+              borderColor: COLORS.forest,
             }}
           />
         </Pressable>

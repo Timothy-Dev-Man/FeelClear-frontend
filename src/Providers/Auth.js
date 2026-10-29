@@ -1,6 +1,5 @@
 import { createContext, useEffect, useState } from "react"
 import { getToken, removeToken, storeToken } from "../Storage/auth"
-import { DevSettings } from "react-native"
 import { loginFetch, registerFetch } from "../Api/auth"
 import { getMeFetch, updateProfileFetch } from "../Api/user"
 
@@ -9,18 +8,34 @@ export const AuthContext = createContext()
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
   const [selectedPic, setSelectedPic] = useState(null)
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
+    let active = true
+
     async function loadUser() {
-      const user = await getUser()
-      if (user) {
-        setUser(user)
+      try {
+        const token = await getToken()
+        if (!token) return
+
+        const result = await getMeFetch(token)
+        if (active && result?.user) setUser(result.user)
+      } catch (error) {
+        if (error.status === 401) {
+          try {
+            await removeToken()
+          } catch { }
+        }
+      } finally {
+        if (active) setIsLoading(false)
       }
-      setIsLoading(false)
     }
 
     loadUser()
+
+    return () => {
+      active = false
+    }
   }, [])
 
   async function register(username, profilePicUrl, password) {
@@ -29,32 +44,31 @@ export function AuthProvider({ children }) {
     try {
       const newUser = await registerFetch(username, profilePicUrl, password)
 
-      if (newUser && newUser.token) {
-        await storeToken(newUser.token)
-        setUser(newUser.user)
+      if (!newUser?.token || !newUser?.user) {
+        throw new Error("Registration response was incomplete. Please try again.")
       }
-    } catch (err) {
-      if (err.includes("users_username_key")) {
-        alert("Username already taken")
-        return
-      }
-      alert(`${err}`)
-      console.error("Register error:", err)
-      throw err
+
+      await storeToken(newUser.token)
+      setUser(newUser.user)
     } finally {
       setIsLoading(false)
     }
   }
 
   async function login(username, password) {
-    const user = await loginFetch(username, password)
+    setIsLoading(true)
+    try {
+      const result = await loginFetch(username, password)
 
-    if (!user?.token) {
-      throw new Error("No token returned from backend")
+      if (typeof result?.token !== "string" || !result?.user) {
+        throw new Error("Login response was incomplete. Please try again.")
+      }
+
+      await storeToken(result.token)
+      setUser(result.user)
+    } finally {
+      setIsLoading(false)
     }
-
-    await storeToken(user?.token)
-    setUser(user.user)
   }
 
   async function updateUser(newUsername, newUrl) {
@@ -62,33 +76,39 @@ export function AuthProvider({ children }) {
     try {
       const token = await getToken()
       await updateProfileFetch(token, newUsername, newUrl)
-      /* Now get the user after you updated them */
       await getUser()
-    } catch (err) {
-      throw err
     } finally {
       setIsLoading(false)
     }
   }
 
   async function getUser() {
+    const token = await getToken()
+    if (!token) {
+      setUser(null)
+      return null
+    }
+
     try {
-      const token = await getToken()
       const me = await getMeFetch(token)
-      console.log("Auth ME: ", me)
-      if (me && me.user) {
-        setUser(me.user)
-        return me.user
+      if (me?.user) setUser(me.user)
+      return me?.user ?? null
+    } catch (error) {
+      if (error.status === 401) {
+        await removeToken()
+        setUser(null)
       }
-    } catch (err) {
-      throw err
+      throw error
     }
   }
 
   async function logout() {
-    setUser(null)
-    await removeToken()
-    DevSettings.reload()
+    try {
+      await removeToken()
+    } finally {
+      setUser(null)
+      setSelectedPic(null)
+    }
   }
 
   return (

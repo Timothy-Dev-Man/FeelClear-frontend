@@ -1,4 +1,5 @@
 import { Image, View } from "react-native"
+import { COLORS } from "../Styles/StyleColors"
 
 const UserIcon = ({ url, style }) => {
   return (
@@ -7,7 +8,7 @@ const UserIcon = ({ url, style }) => {
         {
           borderRadius: 40,
           padding: 3,
-          backgroundColor: "#fff",
+          backgroundColor: COLORS.surface,
           marginBottom: -10,
 
           shadowColor: "#000",

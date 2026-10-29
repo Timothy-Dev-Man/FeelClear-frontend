@@ -2,24 +2,20 @@ import { StyleSheet } from "react-native"
 import { COLORS } from "../../StyleColors"
 
 export const styles = StyleSheet.create({
+  container: {
+    flexGrow: 1,
+    paddingHorizontal: 24,
+    paddingTop: 40,
+    paddingBottom: 28,
+    backgroundColor: COLORS.background,
+    justifyContent: "center",
+  },
   header: {
     flexDirection: "row",
     alignItems: "center",
-    borderColor: COLORS.mainInputOutline,
-    borderWidth: 2,
-    borderLeftWidth: 2,
-    borderRadius: 50,
     width: "100%",
-    height: "30%",
-    backgroundColor: COLORS.mainLightBackground,
-    marginTop: 10,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.08,
-    shadowRadius: 10,
-    elevation: 6,
-    gap: 20,
-    padding: 20
+    marginBottom: 26,
+    gap: 16,
   },
 
   headerTextContainer: {
@@ -27,70 +23,69 @@ export const styles = StyleSheet.create({
   },
 
   title: {
-    fontSize: 26,
+    fontSize: 30,
+    fontFamily: "serif",
     fontWeight: "700",
+    color: COLORS.indigo,
   },
 
   subtitle: {
     fontSize: 14,
-    color: COLORS.placeHolderColor,
+    color: COLORS.mutedBlueGray,
     marginTop: 4,
   },
-  container: {
-    flex: 1,
-    padding: 20,
-    paddingTop: 90,
-    backgroundColor: COLORS.mainDarkBackground,
-    justifyContent: "flex-start",
-    height: "100%",
-    flexDirection: "column",
+  authSpacer: {
+    height: 28,
   },
 
   inputBox: {
     width: "100%",
     justifyContent: "center",
+    gap: 12,
   },
 
   input: {
-    backgroundColor: COLORS.mainInput,
-    borderColor: COLORS.mainInputOutline,
-    borderWidth: 2,
-    borderLeftWidth: 2,
-    borderRadius: 50,
+    backgroundColor: COLORS.surface,
+    borderColor: COLORS.border,
+    borderWidth: 1,
+    borderRadius: 12,
     width: "100%",
-    height: "20%",
-    marginTop: 10,
-    paddingLeft: 50,
-    fontSize: 20,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.08,
-    shadowRadius: 10,
-    elevation: 6,
+    minHeight: 54,
+    paddingHorizontal: 16,
+    fontSize: 16,
+    color: COLORS.indigo,
   },
 
   button: {
     backgroundColor: COLORS.mainButton,
-    padding: 15,
-    borderRadius: 50,
+    minHeight: 52,
+    paddingHorizontal: 20,
+    borderRadius: 12,
     alignItems: "center",
-    margin: 10,
-    width: "80%",
-    alignSelf: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.12,
-    shadowRadius: 12,
-    elevation: 8,
+    justifyContent: "center",
+    marginTop: 20,
+    width: "100%",
   },
 
   buttonText: {
-    color: "#fff",
+    color: COLORS.white,
     fontWeight: "600",
+  },
+  buttonDisabled: {
+    opacity: 0.62,
   },
 
   link: {
-    marginTop: 15,
+    marginTop: 8,
     textAlign: "center",
+    color: COLORS.forest,
+    fontSize: 14,
+    fontWeight: "600",
+  },
+  error: {
+    color: COLORS.error,
+    textAlign: "center",
+    marginTop: 12,
+    lineHeight: 20,
   },
 })

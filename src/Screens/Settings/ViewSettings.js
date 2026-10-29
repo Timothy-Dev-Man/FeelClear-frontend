@@ -7,6 +7,7 @@ import Verify from "../../Components/Verify"
 import { useState } from "react"
 import { useRelationship } from "../../Providers/Context/relationshipContext"
 import { SadCloudIcon } from "../../Components/Icons/CloudIcon"
+import { COLORS } from "../../Styles/StyleColors"
 
 const SettingsPage = () => {
   const [showLogout, setShowLogout] = useState(false)
@@ -14,7 +15,7 @@ const SettingsPage = () => {
 
   const { deleteRelationship, relationship } = useRelationship()
 
-  const { getUser, logout } = useAuth()
+  const { logout } = useAuth()
 
   async function handleUnpair() {
     try {
@@ -22,8 +23,6 @@ const SettingsPage = () => {
         return
       }
       await deleteRelationship()
-      const me = await getUser()
-      console.log(" handleUnpair ME: ", me)
     } catch (err) {
       throw err
     }
@@ -37,42 +36,46 @@ const SettingsPage = () => {
   }
 
   return (
-    <View style={settingsStyles.container}>
-      <Text style={settingsStyles.title}>Settings</Text>
-      <EditProfile />
-      <Pressable
-        style={settingsStyles.logoutButton}
-        onPress={() => setShowLogout(true)}
-      >
-        <Text>Logout</Text>
-      </Pressable>
+    <>
+      <View style={settingsStyles.container}>
+        <Text style={settingsStyles.title}>Settings</Text>
+        <EditProfile />
+        <Pressable
+          style={settingsStyles.logoutButton}
+          onPress={() => setShowLogout(true)}
+        >
+          <Text style={{ color: COLORS.white, fontWeight: "600" }}>Logout</Text>
+        </Pressable>
 
-      <Pressable
-        style={[settingsStyles.logoutButton, { opacity: !relationship ? 0.4 : 1 }]}
-        onPress={() => handleShowUnpair()}
-      >
-        <Text>Unpair with partner</Text>
-      </Pressable>
-      {showLogout && (
-        <Verify
-          cancel={setShowLogout}
-          functionPassed={logout}
-          color="#BE6B9D"
-          text="Logout"
-          component={<SadCloudIcon />}
-        />
-      )}
-      {showUnpair && (
-        <Verify
-          cancel={setShowUnpair}
-          functionPassed={handleUnpair}
-          color="#BE6B9D"
-          text="Unpair"
-          component={<SadCloudIcon />}
-        />
-      )}
+        <Pressable
+          style={[settingsStyles.logoutButton, { opacity: !relationship ? 0.4 : 1 }]}
+          onPress={() => handleShowUnpair()}
+        >
+          <Text style={{ color: COLORS.white, fontWeight: "600" }}>
+            Unpair with partner
+          </Text>
+        </Pressable>
+        {showLogout && (
+          <Verify
+            cancel={setShowLogout}
+            functionPassed={logout}
+            color={COLORS.berry}
+            text="Logout"
+            component={<SadCloudIcon />}
+          />
+        )}
+        {showUnpair && (
+          <Verify
+            cancel={setShowUnpair}
+            functionPassed={handleUnpair}
+            color={COLORS.berry}
+            text="Unpair"
+            component={<SadCloudIcon />}
+          />
+        )}
+      </View>
       <Navigation />
-    </View>
+    </>
   )
 }
 

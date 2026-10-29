@@ -1,4 +1,11 @@
-import { Pressable, Text, TextInput, View } from "react-native"
+import {
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  ScrollView,
+  Text,
+  TextInput,
+} from "react-native"
 import { settingsStyles } from "../../Styles/screens/Home/settingsStyles"
 import { COLORS } from "../../Styles/StyleColors"
 import { useState } from "react"
@@ -7,7 +14,7 @@ import ProfileIcon from "../../Components/Icons/ProfileIcon"
 import { useAuth } from "../../Providers/Context/authContext"
 
 const ChangeUserPage = () => {
-  const [newUsername, setNewUsername] = useState()
+  const [newUsername, setNewUsername] = useState("")
   const { selectedPic, setSelectedPic, updateUser } = useAuth()
 
   const navigation = useNavigation()
@@ -41,43 +48,46 @@ const ChangeUserPage = () => {
   }
 
   return (
-    <View
-      style={[
-        settingsStyles.container,
-        { backgroundColor: COLORS.mainDarkBackground },
-      ]}
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
-      <Text style={settingsStyles.title}>Settings</Text>
-      <ProfileIcon
-        userProfileUri={selectedPic}
-        title="Choose your avatar"
-        text="This can be changed in settings."
-        onPress={() => navigation.navigate("ChooseIcon", { mode: "settings" })}
-      />
-
-      <TextInput
-        placeholder="New username"
-        placeholderTextColor={COLORS.placeHolderColor}
-        value={newUsername}
-        onChangeText={setNewUsername}
-        style={settingsStyles.input}
-      />
-
-      <Pressable
-        style={settingsStyles.logoutButton}
-        onPress={() => handleUpdate()}
+      <ScrollView
+        contentContainerStyle={settingsStyles.container}
+        keyboardShouldPersistTaps="handled"
       >
-        <Text>Update</Text>
-      </Pressable>
-      <Pressable
-        style={settingsStyles.cancelButton}
-        onPress={() => handleCancel()}
-      >
-        <Text style={{ color: "#BE6B9D", fontWeight: "800", fontSize: 15 }}>
-          Cancel
-        </Text>
-      </Pressable>
-    </View>
+        <Text style={settingsStyles.title}>Edit profile</Text>
+        <ProfileIcon
+          userProfileUri={selectedPic}
+          title="Choose your avatar"
+          text="This can be changed in settings."
+          onPress={() => navigation.navigate("ChooseIcon", { mode: "settings" })}
+        />
+
+        <TextInput
+          placeholder="New username"
+          placeholderTextColor={COLORS.placeHolderColor}
+          value={newUsername}
+          onChangeText={setNewUsername}
+          style={settingsStyles.input}
+        />
+
+        <Pressable
+          style={settingsStyles.logoutButton}
+          onPress={() => handleUpdate()}
+        >
+          <Text style={{ color: COLORS.white, fontWeight: "600" }}>Update</Text>
+        </Pressable>
+        <Pressable
+          style={settingsStyles.cancelButton}
+          onPress={() => handleCancel()}
+        >
+          <Text style={{ color: COLORS.berry, fontWeight: "700", fontSize: 15 }}>
+            Cancel
+          </Text>
+        </Pressable>
+      </ScrollView>
+    </KeyboardAvoidingView>
   )
 }
 

@@ -1,69 +1,54 @@
+import { getApiErrorMessage, readApiResponse } from "./response"
+
 export async function setRelationshipFetch(userId1, inputCode, token) {
-  try {
-    const response = await fetch(
-      `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/relationship/`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ userId1: userId1, partnerCode: inputCode }),
+  if (!token) throw new Error("You are not signed in.")
+
+  const response = await fetch(
+    `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/relationship/`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
-    )
+      body: JSON.stringify({ userId1, partnerCode: inputCode }),
+    },
+  )
 
-    const data = await response.json()
-
-    console.log("setRelationshipFetch: ", data)
-    return data
-  } catch (err) {
-    console.error("setRelationshipFetch error:", err)
-    throw err
+  const data = await readApiResponse(response)
+  if (data.error || data.errors || data.err) {
+    throw new Error(getApiErrorMessage(data))
   }
+  return data
 }
 
 export async function getRelationshipFetch(token) {
-  try {
-    const response = await fetch(
-      `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/relationship/`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    )
+  if (!token) throw new Error("You are not signed in.")
 
-    const data = await response.json()
-
-    console.log("setRelationshipFetch: ", data)
-    return data
-  } catch (err) {
-    console.error("setRelationshipFetch error:", err)
-    throw err
-  }
+  const response = await fetch(
+    `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/relationship/`,
+    {
+      method: "GET",
+      headers: { Authorization: `Bearer ${token}` },
+    },
+  )
+  return await readApiResponse(response)
 }
 
 export async function deleteRelationshipFetch(token) {
-  try {
-    const response = await fetch(
-      `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/relationship/`,
-      {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    )
+  if (!token) throw new Error("You are not signed in.")
 
-    const data = await response.json()
+  const response = await fetch(
+    `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/relationship/`,
+    {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${token}` },
+    },
+  )
 
-    console.log("setRelationshipFetch: ", data)
-    return data
-  } catch (err) {
-    console.error("setRelationshipFetch error:", err)
-    throw err
+  const data = await readApiResponse(response)
+  if (data.error || data.errors || data.err) {
+    throw new Error(getApiErrorMessage(data))
   }
+  return data
 }
