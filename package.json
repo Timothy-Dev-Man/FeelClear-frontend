@@ -18,6 +18,7 @@
     "expo-linear-gradient": "~55.0.13",
     "expo-secure-store": "~55.0.18",
     "expo-status-bar": "~55.0.4",
+    "expo-updates": "~55.0.33",
     "lucide-react-native": "^1.64.0",
     "react": "19.2.0",
     "react-native": "0.83.2",
